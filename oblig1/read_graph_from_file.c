@@ -16,21 +16,29 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     int edges;
     
     fscanf(fp, "# Nodes: %d Edges: %d\n", N, &edges);   // Get nodes and edges
+    //printf("Reads nodes and edges successfully\n");
     fgets(buff, 255, fp);
 
+    //printf("Attempting memory allocated\n");
     *row_ptr = (int*) calloc((*N + 1), sizeof(int));    // Allocate memory, initialized to zero
     *col_idx = (int*) calloc(edges, sizeof(int));
     *val = (double*) calloc(edges, sizeof(double));
+    //printf("Memory allocated successfully\n");
 
     int from, to;
-    int out_counter[edges];  // L(j)
+    //printf("EEEEEEEEE\n");
+    //int out_counter[edges]; Does not work  // L(j)
+    int *out_counter = (int*) malloc(edges * sizeof(int));
+    //printf("out_counter[edges] allocated successfully\n");
 
     for (int i=0; i<edges; i++){
         out_counter[i] = 0;
     }
 
-    int fromnode[edges];
-    int tonode[edges];
+    //int fromnode[edges];
+    //int tonode[edges];
+    int *fromnode = (int*) malloc(edges * sizeof(int));
+    int *tonode = (int*) malloc(edges * sizeof(int));
 
     for (int i=0; i<edges; i++){    
         fscanf(fp, "%d %d\n", &from, &to);      // Read from and to values
@@ -42,6 +50,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
         tonode[i] = to;
     }
     
+    //printf("Almost there\n");
     int tot = 0;
     int counter[*N+1];
 
@@ -78,6 +87,9 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
         //printf("out_counter[fromnode[%d]] = %d\n", i, out_counter[fromnode[i]]);
         (*val)[idx] = 1.0/(out_counter[fromnode[i]]);
     }
+    free(out_counter);
+    free(fromnode);
+    free(tonode);
 
     /*
     printf("From\tTo\n");
@@ -99,6 +111,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     //}
 
    //printf("\n"); 
+
 }   // End: read_graph_from_file function
 
 // Main-function for testing purposes only

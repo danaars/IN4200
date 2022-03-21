@@ -37,10 +37,11 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     //while (iter < 3){
         maxdist = 0.0;
 
-        crs_mat_vec_mult(N, row_ptr, col_idx, val, x, scores);  // Matrix vector multiplication
+        crs_mat_vec_mult(N, row_ptr, col_idx, val, prev_x, scores);  // Matrix vector multiplication
+                                                                // Error! Wrong input vector!
 
         W = dangling(num_idx, dang_idx, prev_x);
-        printf("W = %f\n", W);
+        //printf("W = %f\n", W);
         //exit(1);
         //printf("---After iteration %d:\n", iter + 1);
         for (int i=0; i<N; i++){        // Calculate next iter x array

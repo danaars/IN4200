@@ -8,10 +8,15 @@
 void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val);
 //void crs_mat_vec_mult(int N, int *row_ptr, int *col_idx, double *val, double *x, double *prod);
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores);
+void top_n_webpages(int N, double *scores, int n);
+//void merge(double *arr, int l, int m, int r);
+//void mergesort(double *arr, int l, int r);
+
 
 int main(int argc, char *argv[]){
 
-    char *filename = "8nodes_graph.txt";
+    char *filename = "100nodes_graph.txt";
+    //char *filename = "web-stanford_new.txt";
    
     int N;
     int *row_ptr;
@@ -19,6 +24,7 @@ int main(int argc, char *argv[]){
     double *val;
 
     read_graph_from_file(filename, &N, &row_ptr, &col_idx, &val);
+    //printf("Outside of read func\n");
 
     double *scores = (double*) malloc(N * sizeof(double));
 
@@ -27,11 +33,24 @@ int main(int argc, char *argv[]){
 
     PageRank_iterations(N, row_ptr, col_idx, val, d, epsilon, scores);
 
+    top_n_webpages(N, scores, 10);
+
+    /*
     printf("d = %1.2f gives final score values:\n", d);
-    for (int i=0; i<N; i++){
-        printf("%f\n", scores[i]);
+    for (int i=N-1; i>N-11; i--){
+        printf("scores[%d] = %1.12f\n", i, scores[i]);
     }
+    printf("\n");
+    for (int i=0; i<10; i++){
+        printf("scores[%d] = %1.12f\n", i, scores[i]);
+    }
+    */
     //printf("\n");
+    /*
+    for (int i=0; i<N; i++){
+        printf("scores[%d] = %1.12f\n", i, scores[i]);
+    }
+    */
 
     free(scores);
 
