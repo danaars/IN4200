@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 
-void merge(double *arr, int l, int m, int r);
-void mergesort(double * arr, int l, int r);
+//void merge(double *arr, int l, int m, int r);
+//void mergesort(double * arr, int l, int r);
 
 void top_n_webpages(int N, double *scores, int n){
 
@@ -19,6 +20,7 @@ void top_n_webpages(int N, double *scores, int n){
 
     for (int i=0; i<n; i++){
         max = 0.0;
+        //#pragma omp parallel for reduction(max: max)
         for (int j=0; j<N; j++){
             if (scores[j] > max && scores[j] < last_max){
                 max = scores[j];
@@ -34,7 +36,7 @@ void top_n_webpages(int N, double *scores, int n){
     printf("Top %d webpages:\n", n);
     printf("Node:\tScore:\n");
     for (int i=0; i<n; i++){
-        printf("%d \t %1.6f \n", top_nodes[i], top_scores[i]);
+        printf("%d \t %1.20f \n", top_nodes[i], top_scores[i]);
     }
 }
 

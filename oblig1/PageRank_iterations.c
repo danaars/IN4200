@@ -3,13 +3,12 @@
 
 //#include "read_graph_from_file.c"
 void crs_mat_vec_mult(int N, int *row_ptr, int *col_idx, double *val, double *x, double *prod);
-void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
-        double d, double epsilon, double *scores);
+//void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores);
 double dangling(int num_idx, int *dang_idx, double *prev_x);
 void get_dang_idx(int N, int edges, int *num_idx, int *dang_idx, int *col_idx);
 
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
-        double d, double epsilon, double *scores){
+        double d, long double epsilon, double *scores){
 
     double *x = (double*) malloc(N * sizeof(double));       // Initial guess
 
@@ -19,11 +18,12 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     double prev_x[N];
     double *tmp;
     double dist;
-    double maxdist = 2*epsilon;
+    long double maxdist = 2*epsilon;
     int num_idx;
     int dang_idx[N];
-    get_dang_idx(N, row_ptr[N], &num_idx, dang_idx, col_idx);  // row_ptr[N] = edges
     double W;
+
+    get_dang_idx(N, row_ptr[N], &num_idx, dang_idx, col_idx);  // row_ptr[N] = edges
 
     //printf("---Initial guess:\n");
     for (int i=0; i<N; i++){
@@ -34,11 +34,10 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
 
     int iter = 0;
     while (maxdist > epsilon){
-    //while (iter < 3){
+    //while (iter < 5){
         maxdist = 0.0;
 
         crs_mat_vec_mult(N, row_ptr, col_idx, val, prev_x, scores);  // Matrix vector multiplication
-                                                                // Error! Wrong input vector!
 
         W = dangling(num_idx, dang_idx, prev_x);
         //printf("W = %f\n", W);
@@ -66,11 +65,23 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
 
         //printf("Addr scores etter bytte: %p\n", scores);
         x = tmp;
-        iter++;
+        iter+=1;
+    }
+    if (iter % 2 != 0){
+        scores = tmp;
+    } else {
+        free(x);
     }
     //free(dang_idx);
+    /*
+    for (int i=0; i<N; i++){
+        printf("%1.12f\n", prev_x[i]);
+    }
+    */
+    //printf("\n");
 
-    printf("Number of iterations: %d\n", iter);
+    //printf("Siste internal score addr: %p\n", scores);
+    printf("Number of PageRank iterations: %d\n", iter);
 }
 
 void crs_mat_vec_mult(int N, int *row_ptr, int *col_idx, double *val, double *x, double *prod){
