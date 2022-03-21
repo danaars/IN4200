@@ -8,6 +8,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
         printf("Error: file not found\n");
         exit(1);
     }
+    printf("Reading from file: %s\n", filename);
 
     char buff[255];
     fgets(buff, 255, fp);       // Skip first two lines
@@ -111,6 +112,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     //}
 
    //printf("\n"); 
+   //printf("Success\n");
 
 }   // End: read_graph_from_file function
 

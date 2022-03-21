@@ -5,17 +5,17 @@ void merge(double *arr, int l, int m, int r);
 void mergesort(double * arr, int l, int r);
 
 void top_n_webpages(int N, double *scores, int n){
-    // Sort the scores values in place
+
     double top_scores[n];
     int top_nodes[n];
-    for (int i=0; i<n; i++){
-        top_scores[i] = 0.0;
-        top_nodes[i] = 0;
-    }
 
     double max;
-    double last_max = 999.9;
+    double last_max = 99.9;
     int idx;
+
+    if (n > N){
+        n = N;
+    }
 
     for (int i=0; i<n; i++){
         max = 0.0;
@@ -30,13 +30,12 @@ void top_n_webpages(int N, double *scores, int n){
         top_scores[i] = max;
         top_nodes[i] = idx;
     }
-    //mergesort(scores, 0, N-1);
+
     printf("Top %d webpages:\n", n);
     printf("Node:\tScore:\n");
     for (int i=0; i<n; i++){
-        printf("%d \t %1.12f \n", top_nodes[i], top_scores[i]);
+        printf("%d \t %1.6f \n", top_nodes[i], top_scores[i]);
     }
-
 }
 
 // Not used

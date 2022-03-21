@@ -57,17 +57,20 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
             prev_x[i] = x[i];
         }
         //printf("\n");
+        //printf("Addr scores: %p\n", scores);
 
         //printf("maxdist: %.12f\n", maxdist);
         
         tmp = scores;
         scores = x;
+
+        //printf("Addr scores etter bytte: %p\n", scores);
         x = tmp;
         iter++;
     }
     //free(dang_idx);
 
-    printf("Avsluttet while løkke på iterasjon nr. %d\n", iter);
+    printf("Number of iterations: %d\n", iter);
 }
 
 void crs_mat_vec_mult(int N, int *row_ptr, int *col_idx, double *val, double *x, double *prod){
