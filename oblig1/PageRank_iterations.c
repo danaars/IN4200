@@ -9,7 +9,7 @@ double dangling(int num_idx, int *dang_idx, double *prev_x);
 void get_dang_idx(int N, int edges, int *num_idx, int *dang_idx, int *col_idx);
 
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
-        double d, long double epsilon, double *scores){
+        double d, double epsilon, double *scores){
 
     double *Ax = (double*) malloc(N * sizeof(double));       // Initial guess
 
@@ -19,7 +19,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     double prev_x[N];
     double *tmp;
     double dist;
-    long double maxdist = 2*epsilon;
+    double maxdist = 2*epsilon;
     int num_idx;
     int dang_idx[N];
     double W, damp;
@@ -91,6 +91,7 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     }
     */
     //printf("\n");
+    free(Ax);
 
     //printf("Siste internal score addr: %p\n", scores);
     printf("Number of PageRank iterations: %d\n", iter);
