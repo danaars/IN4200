@@ -7,7 +7,7 @@ for i in range(4):
 
 for line in infile:
     fromnode, tonode = line.split()
-    outfile.write(f"{int(fromnode)-1}\t{int(tonode)}\n")
+    outfile.write(f"{int(fromnode)-1}\t{int(tonode)-1}\n")
 
 infile.close()
 outfile.close()

@@ -36,7 +36,7 @@ void top_n_webpages(int N, double *scores, int n){
     printf("Top %d webpages:\n", n);
     printf("Node:\tScore:\n");
     for (int i=0; i<n; i++){
-        printf("%d \t %1.20f \n", top_nodes[i], top_scores[i]);
+        printf("%d \t %1.6f \n", top_nodes[i], top_scores[i]);
     }
 }
 

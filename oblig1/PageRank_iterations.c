@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+//#include <math.h>
 
 //#include "read_graph_from_file.c"
 void crs_mat_vec_mult(int N, int *row_ptr, int *col_idx, double *val, double *x, double *prod);
@@ -10,10 +11,10 @@ void get_dang_idx(int N, int edges, int *num_idx, int *dang_idx, int *col_idx);
 void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
         double d, long double epsilon, double *scores){
 
-    double *x = (double*) malloc(N * sizeof(double));       // Initial guess
+    double *Ax = (double*) malloc(N * sizeof(double));       // Initial guess
 
     for (int i=0; i<N; i++)
-        x[i] = 1.0/N;
+        Ax[i] = 1.0/N;
 
     double prev_x[N];
     double *tmp;
@@ -21,14 +22,14 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     long double maxdist = 2*epsilon;
     int num_idx;
     int dang_idx[N];
-    double W;
+    double W, damp;
 
     get_dang_idx(N, row_ptr[N], &num_idx, dang_idx, col_idx);  // row_ptr[N] = edges
 
-    //printf("---Initial guess:\n");
+    //printf("---After iteration 0:\n");
     for (int i=0; i<N; i++){
-        prev_x[i] = x[i];
-        //printf("%12.6f", x[i]);
+        prev_x[i] = Ax[i];
+        //printf("%12.6f\n", x[i]);
     }
     //printf("\n");
 
@@ -37,41 +38,52 @@ void PageRank_iterations(int N, int *row_ptr, int *col_idx, double *val,
     //while (iter < 5){
         maxdist = 0.0;
 
-        crs_mat_vec_mult(N, row_ptr, col_idx, val, prev_x, scores);  // Matrix vector multiplication
+        crs_mat_vec_mult(N, row_ptr, col_idx, val, prev_x, Ax);  // Matrix vector multiplication
 
         W = dangling(num_idx, dang_idx, prev_x);
+        damp = (1.0 - d + d * W)/N;
+        //printf("Addr scores pointer: %p\n", scores);
         //printf("W = %f\n", W);
         //exit(1);
         //printf("---After iteration %d:\n", iter + 1);
         for (int i=0; i<N; i++){        // Calculate next iter x array
-            x[i] = (1.0 - d + d * W)/N + d * scores[i];
+            //scores[i] = (1.0 - d + d * W)*one_over_N + d * scores[i];
+            scores[i] = damp + d * Ax[i];
+            //for (int j=0; j<N; i++){
+                //printf("%1.8f\n", scores[j]);
+            //}
 
-            //printf("%12.6f", x[i]);
+            //printf("%12.6f\n", scores[i]);
 
-            dist = x[i] - prev_x[i];
+            dist = scores[i] - prev_x[i];
+            //dist = fabs(scores[i] - prev_x[i]);
             dist = (dist > 0.0) ? dist:-dist;
-            if (dist > maxdist)
+            if (dist > maxdist){
                 maxdist = dist;
+            }
 
-            prev_x[i] = x[i];
+            prev_x[i] = scores[i];
+            //prev_x[i] = scores[i];
         }
         //printf("\n");
         //printf("Addr scores: %p\n", scores);
 
         //printf("maxdist: %.12f\n", maxdist);
         
-        tmp = scores;
-        scores = x;
+        //tmp = scores;
+        //scores = x;
 
         //printf("Addr scores etter bytte: %p\n", scores);
-        x = tmp;
+        //x = tmp;
         iter+=1;
     }
+    /*
     if (iter % 2 != 0){
         scores = tmp;
     } else {
         free(x);
     }
+    */
     //free(dang_idx);
     /*
     for (int i=0; i<N; i++){
