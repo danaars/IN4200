@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-#include "../one_folder/simple-jpeg/import_export_jpeg.h"
+#include "../simple-jpeg/import_export_jpeg.h"
 #include "parallel_functions.h"
 
 int main(int argc, char *argv[]){

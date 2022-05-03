@@ -1,10 +1,10 @@
 CC = mpicc
-LDFLAGS = -L../one_folder/simple-jpeg/ -lsimplejpeg
+LDFLAGS = -L../simple-jpeg/ -lsimplejpeg
 
 all: simple-jpeg parallel_main
 
 simple-jpeg:
-	$(MAKE) -C ../one_folder/simple-jpeg
+	$(MAKE) -C ../simple-jpeg
 
 parallel_main: parallel_main.o import_export_jpeg.o
 	$(CC) $^ -o $@ $(LDFLAGS)
