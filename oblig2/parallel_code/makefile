@@ -11,7 +11,7 @@ parallel_main: parallel_main.o parallel_functions.o
 
 clean:
 	rm -f *.o 
-	#$(MAKE) -C ../simple-jpeg clean
+	$(MAKE) -C ../simple-jpeg clean
 
 clean_exe:
 	rm -f parallel_main
