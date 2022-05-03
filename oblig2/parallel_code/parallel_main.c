@@ -30,9 +30,10 @@ int main(int argc, char *argv[]){
     if (my_rank == 0){
         printf("Input JPEG: %s\n", input_jpeg_filename);
         import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
-        allocate_image(&whole_image, m, n);
-        printf("Picture has dim m: %d, n: %d\nLen image_chars = %d\n", m, n, m*n);
+        //allocate_image(&whole_image, m, n);       // Needs to be outside
+        //printf("Picture has dim m: %d, n: %d\nLen image_chars = %d\n", m, n, m*n);
     }
+    allocate_image(&whole_image, m, n);
 
     MPI_Bcast(&m, 1, MPI_INT, 0, MPI_COMM_WORLD);   // Optional
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);   // Optional
@@ -72,7 +73,7 @@ int main(int argc, char *argv[]){
             my_m * my_n, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
     convert_jpeg_to_image(my_image_chars, &u);
-    //iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters);
+    iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters);
 
     //printf("%f\n", u_bar->image_data[0]);
 
@@ -104,12 +105,7 @@ int main(int argc, char *argv[]){
         printf("Legal\n");
     }
     */
-
-    int *a = (int*) malloc(10 * sizeof(int));
-    printf("%d\n", a[10]);
-
-    exit(1);
-
+    /*
     if (my_rank == 0){
         float tmp;
         for (int i=0; i<my_m; i++){
@@ -119,23 +115,23 @@ int main(int argc, char *argv[]){
         }    
         printf("legal\n");
     }
-
+    */
     
-    MPI_Gatherv((u.image_data[0]), my_m * my_n, MPI_FLOAT, (whole_image.image_data[0]),
+    MPI_Gatherv((u_bar.image_data[0]), my_m * my_n, MPI_FLOAT, (whole_image.image_data[0]),
             rank_elems, displs, MPI_FLOAT, 0, MPI_COMM_WORLD);
     
 
     
-    /*
+    
     if (my_rank == 0){
         convert_image_to_jpeg(&whole_image, image_chars);
         export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
         deallocate_image(&whole_image);
     }
-    */
+    
 
     deallocate_image(&u);
-    //deallocate_image(&u_bar);
+    deallocate_image(&u_bar);
 
     free(my_image_chars);
     MPI_Finalize();
