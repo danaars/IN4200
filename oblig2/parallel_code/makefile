@@ -11,7 +11,7 @@ parallel_main: parallel_main.o import_export_jpeg.o
 
 clean:
 	rm -f *.o 
-	$(MAKE) -C ../one_folder/simple-jpeg clean
+	$(MAKE) -C ../simple-jpeg clean
 
 clean_exe:
 	rm -f parallel_main
