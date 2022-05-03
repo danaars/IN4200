@@ -2,8 +2,13 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-#include "../simple-jpeg/import_export_jpeg.h"
+//#include "../simple-jpeg/import_export_jpeg.h"
 #include "parallel_functions.h"
+
+void import_JPEG_file(const char *filename, unsigned char **image_chars,
+        int *image_height, int *image_width, int *num_components);
+void export_JPEG_file(const char *filename, const unsigned char *image_chars,
+        int image_height, int image_width, int num_components, int quality);
 
 int main(int argc, char *argv[]){
 

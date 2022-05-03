@@ -5,15 +5,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "parallel_functions.c"
-
-/*
-void import_JPEG_file(const char *filename, unsigned char **image_chars,
-        int *image_height, int *image_width, int *num_components);
-
-void export_JPEG_file(const char* filename, const unsigned char* image_chars,
-        int image_height, int image_width, int num_components, int quality);
-*/
+// Image struct definition
+typedef struct image
+{   // Stores a 2D matrix of size m x n
+    float **image_data;
+    int m;
+    int n;
+} image;
 
 void allocate_image(image *u, int m, int n);
 void deallocate_image(image *u);
