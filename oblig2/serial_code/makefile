@@ -14,7 +14,7 @@ clean:
 	$(MAKE) -C ../simple-jpeg clean
 
 clean_exe:
-	rm -f parallel_main
+	rm -f serial_main
 
 run:
 	./serial_main 0.2 10 mona_lisa_noisy.jpg ml_denoise.jpg
