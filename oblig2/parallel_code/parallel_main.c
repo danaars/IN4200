@@ -126,14 +126,15 @@ int main(int argc, char *argv[]){
     if (my_rank == 0){
         convert_image_to_jpeg(&whole_image, image_chars);
         export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
-        deallocate_image(&whole_image);
     }
     
 
+    deallocate_image(&whole_image);
     deallocate_image(&u);
     deallocate_image(&u_bar);
 
     free(my_image_chars);
+
     MPI_Finalize();
 
     return 0;
