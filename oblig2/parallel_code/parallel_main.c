@@ -34,8 +34,8 @@ int main(int argc, char *argv[]){
         printf("Input JPEG: %s\n", input_jpeg_filename);
         import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
         printf("Grayscale? expect 1, get: %d\n", c);
-        allocate_image(&whole_image, m, n);
-        //printf("Rank 0 has m: %d, n: %d\n");
+        //allocate_image(&whole_image, m, n);
+        printf("Rank 0 has m: %d, n: %d\n", m, n);
     }
 
     MPI_Bcast(&m, 1, MPI_INT, 0, MPI_COMM_WORLD);   // Optional
