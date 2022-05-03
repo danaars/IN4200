@@ -16,4 +16,4 @@ clean_exe:
 	rm -f parallel_main
 
 run:
-	mpirun -np 2 parallel_main 0.2 10 mona_lisa_noisy.jpg john.jpg	
+	mpirun -np 2 parallel_main 0.2 10 dogg.jpg john.jpg	
