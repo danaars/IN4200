@@ -1,3 +1,6 @@
+#Custom
+# object - files
+*.o
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,archlinuxpackages,vim
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,archlinuxpackages,vim
