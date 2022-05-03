@@ -30,24 +30,19 @@ int main(int argc, char *argv[]){
     if (my_rank == 0){
         printf("Input JPEG: %s\n", input_jpeg_filename);
         import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
-        //allocate_image(&whole_image, m, n);       // Needs to be outside
-        //printf("Picture has dim m: %d, n: %d\nLen image_chars = %d\n", m, n, m*n);
     }
-    allocate_image(&whole_image, m, n);
+
+    allocate_image(&whole_image, m, n);     // Needs to be here?
 
     MPI_Bcast(&m, 1, MPI_INT, 0, MPI_COMM_WORLD);   // Optional
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);   // Optional
 
-    //printf("m: %d, n: %d\n");
     my_m = m/num_procs + (my_rank < m % num_procs);   // Height, 1 if true, 0 if false
     my_n = n;    // Width
     my_image_chars = (unsigned char*) malloc(my_m * my_n * sizeof(unsigned char));
 
-    //printf("My rank: %d, my image: (%d, %d)\n", my_rank, my_m, my_n);
     allocate_image(&u, my_m, my_n);
     allocate_image(&u_bar, my_m, my_n);
-
-    //printf("Riktig frem hit\n");
     
     int rank_elems[num_procs];        // How many elements should be sent
     int displs[num_procs];          // From which index does the counting start
@@ -58,15 +53,6 @@ int main(int argc, char *argv[]){
         rank_elems[i+1] = (m/num_procs + (i+1 < m % num_procs)) * n;
         displs[i+1] = rank_elems[i] + displs[i];
     }
-    //rank_ind[num_procs] = m*n;
-
-    /*
-    if (my_rank == 0){
-        for (int i=0; i<num_procs; i++){
-            printf("rank %d\nnumber of elements: %d\nstart index: %d\n\n", i, rank_elems[i], displs[i]);
-        }
-    }
-    */
 
     // Scatter the image_chars array to all processes
     MPI_Scatterv(image_chars, rank_elems, displs, MPI_UNSIGNED_CHAR, my_image_chars,
@@ -75,59 +61,14 @@ int main(int argc, char *argv[]){
     convert_jpeg_to_image(my_image_chars, &u);
     iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters);
 
-    //printf("%f\n", u_bar->image_data[0]);
-
-    /*
-    for (int i=0; i<2; i++){
-        printf("rank elements: %d\n", rank_elems[i]);
-        printf("start index: %d\n", displs[i]);
-        printf("\n");
-    }
-    */
-
-    /*
-    if (my_rank == 0){
-        printf("u %p\n", &u);
-        printf("u.image_data %p\n", &(u.image_data));
-        printf("u.image_data[0] %p\n", &(u.image_data[0]));
-        printf("u.image_data[0][0] %p\n", &(u.image_data[0][0]));
-
-        printf("(u.image_data)[0] %p\n", (u.image_data)[0]);
-
-        printf("whole image: %p\n", (whole_image.image_data)[0]);
-    }
-
-    if (my_rank == 0){
-        float tmp;
-        for (int i=0; i<m*n + 80; i++){
-            tmp = whole_image.image_data[0][i];
-        }    
-        printf("Legal\n");
-    }
-    */
-    /*
-    if (my_rank == 0){
-        float tmp;
-        for (int i=0; i<my_m; i++){
-            for (int j=0; j<my_n+20; j++){
-                tmp = u.image_data[i][j];
-            }
-        }    
-        printf("legal\n");
-    }
-    */
     
     MPI_Gatherv((u_bar.image_data[0]), my_m * my_n, MPI_FLOAT, (whole_image.image_data[0]),
             rank_elems, displs, MPI_FLOAT, 0, MPI_COMM_WORLD);
-    
-
-    
     
     if (my_rank == 0){
         convert_image_to_jpeg(&whole_image, image_chars);
         export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
     }
-    
 
     deallocate_image(&whole_image);
     deallocate_image(&u);
